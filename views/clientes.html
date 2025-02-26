@@ -5,10 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
+    <link rel="stylesheet" href="../public/css/styles.css">
+    <script src="../public/js/clientes.js" defer></script>
 </head>
 
 <body>
     <h1>Gestión de Clientes</h1>
-</body>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Panel de Control</a></li>
+            <li><a href="muebles.html">Muebles</a></li>
+            <li><a href="ventas.html">Ventas</a></li>
+            <li><a href="empleados.html">Empleados</a></li>
+        </ul>
+    </nav>
+    <button id="agregarCliente">Agregar Cliente</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Direccion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaClientes">
+            <!-- Los clientes se insertarán aquí dinámicamente -->
+        </tbody>
+    </table>
 
+    <!-- Formulario modal para agregar cliente -->
+    <div id="modalCliente" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2>Agregar Cliente</h2>
+            <form id="formCliente">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="email" id="email" placeholder="Correo" required>
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+                <input type="text" id="direccion" placeholder="Direccion" required>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</body>
 </html>

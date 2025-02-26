@@ -1,3 +1,3 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Dashboard cargado");
-});
+    console.log("Gestión de Muebles cargado");
+}); 
