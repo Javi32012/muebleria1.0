@@ -1,5 +1,7 @@
+<!-- views/ventas.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +9,76 @@
     <link rel="stylesheet" href="../public/css/styles.css">
     <script src="../public/js/ventas.js" defer></script>
 </head>
+
 <body>
     <h1>Gestión de Ventas</h1>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Panel de Control</a></li>
+            <li><a href="muebles.html">Muebles</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="empleados.html">Empleados</a></li>
+        </ul>
+    </nav>
+
+    <button id="agregarVenta">Agregar Venta</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID Venta</th>
+                <th>Cliente</th>
+                <th>Mueble</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaVentas">
+            <!-- Las ventas se insertarán aquí dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Modal para agregar venta -->
+    <div id="modalVenta" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2>Agregar Venta</h2>
+            <form id="formVenta">
+                <label for="id_cliente">Cliente:</label>
+                <select id="id_cliente" required>
+                    <option value="">Seleccione un cliente</option>
+                </select>
+
+                <label for="id_mueble">Mueble:</label>
+                <select id="id_mueble" required>
+                    <option value="">Seleccione un mueble</option>
+                </select>
+
+                <input type="number" id="cantidad" placeholder="Cantidad" min="1" required>
+                <button type="button" id="agregarMueble">Agregar Mueble</button>
+
+                <h3>Muebles en la orden:</h3>
+                <ul id="listaMuebles"></ul>
+
+                <button type="submit">Registrar Venta</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("agregarVenta").addEventListener("click", function () {
+                document.getElementById("modalVenta").style.display = "flex";
+            });
+
+            document.querySelector(".cerrar").addEventListener("click", function () {
+                document.getElementById("modalVenta").style.display = "none";
+            });
+        });
+    </script>
 </body>
+
 </html>

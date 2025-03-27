@@ -1,13 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muebles</title>
+    <title>Gestión de Muebles</title>
     <link rel="stylesheet" href="../public/css/styles.css">
     <script src="../public/js/muebles.js" defer></script>
 </head>
+
 <body>
     <h1>Gestión de Muebles</h1>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Panel de Control</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="ventas.html">Ventas</a></li>
+            <li><a href="empleados.html">Empleados</a></li>
+        </ul>
+    </nav>
+    <button id="agregarMueble">Agregar Mueble</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaMuebles">
+            <!-- Los muebles se insertarán aquí dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Formulario modal para agregar mueble -->
+    <div id="modalMueble" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2>Agregar Mueble</h2>
+            <form id="formMueble">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="descripcion" placeholder="Descripción" required>
+                <input type="number" id="precio" placeholder="Precio" required>
+                <input type="number" id="stock" placeholder="Stock" required>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
