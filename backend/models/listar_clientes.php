@@ -2,15 +2,21 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include '../config/database.php';
 
-$conexion = new mysqli($host, $usuario, $password, $base_datos);
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(204);
+    exit();
+}
+
+include 'db.php';
+
+$conexion = new mysqli($host, $user, $password, $database);
 
 if ($conexion->connect_error) {
     die(json_encode(["error" => "Error de conexión: " . $conexion->connect_error]));
 }
 
-$query = "SELECT id_cliente, nombre FROM clientes";
+$query = "SELECT  id_cliente, nombre FROM clientes";
 $result = $conexion->query($query);
 
 $clientes = [];

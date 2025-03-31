@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ventas</title>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <link rel="stylesheet" href="../public/css/ventas.css">
     <script src="../public/js/ventas.js" defer></script>
 </head>
 
@@ -23,47 +23,57 @@
 
     <button id="agregarVenta">Agregar Venta</button>
 
-    <table>
+    <table id="tablaVentas" border="1">
         <thead>
             <tr>
-                <th>ID Venta</th>
+                <th>ID Orden</th>
                 <th>Cliente</th>
-                <th>Mueble</th>
-                <th>Cantidad</th>
-                <th>Total</th>
                 <th>Fecha</th>
+                <th>Total</th>
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tablaVentas">
-            <!-- Las ventas se insertarán aquí dinámicamente -->
-        </tbody>
+        <tbody></tbody>
     </table>
+    <div id="detallesVenta" style="display: none;">
+        <h3>Detalles de la Venta</h3>
+        <ul id="listaDetalles"></ul>
+        <button onclick="cerrarDetalles()">Cerrar</button>
+    </div>
+    
 
     <!-- Modal para agregar venta -->
     <div id="modalVenta" class="modal">
         <div class="modal-contenido">
             <span class="cerrar">&times;</span>
             <h2>Agregar Venta</h2>
-            <form id="formVenta">
-                <label for="id_cliente">Cliente:</label>
-                <select id="id_cliente" required>
-                    <option value="">Seleccione un cliente</option>
-                </select>
-
-                <label for="id_mueble">Mueble:</label>
-                <select id="id_mueble" required>
-                    <option value="">Seleccione un mueble</option>
-                </select>
-
-                <input type="number" id="cantidad" placeholder="Cantidad" min="1" required>
-                <button type="button" id="agregarMueble">Agregar Mueble</button>
-
+            <form id="formVenta" class="form-container">
+                <div class="form-group">
+                    <label for="id_cliente">Cliente:</label>
+                    <select id="id_cliente" required>
+                        <option value="">Seleccione un cliente</option>
+                    </select>
+                </div>
+            
+                <div class="form-group">
+                    <label for="id_mueble">Mueble:</label>
+                    <select id="id_mueble" required>
+                        <option value="">Seleccione un mueble</option>
+                    </select>
+                </div>
+            
+                <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" placeholder="Cantidad" min="1" required>
+                </div>
+            
+                <button type="button" id="agregarMueble" class="btn">Agregar Mueble</button>
+            
                 <h3>Muebles en la orden:</h3>
-                <ul id="listaMuebles"></ul>
-
-                <button type="submit">Registrar Venta</button>
-            </form>
+                <ul id="listaMuebles" class="lista-muebles"></ul>
+            
+                <button type="submit" class="btn btn-primary">Registrar Venta</button>
+            </form>                       
 
         </div>
     </div>

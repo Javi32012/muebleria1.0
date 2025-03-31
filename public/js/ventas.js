@@ -1,96 +1,145 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("modalVenta");
-    const btnAgregar = document.getElementById("agregarVenta");
-    const btnCerrar = document.querySelector(".cerrar");
-    const formVenta = document.getElementById("formVenta");
+document.addEventListener("DOMContentLoaded", function () {
+    cargarClientes();
+    cargarMuebles();
+    cargarVentas(); 
+});
 
-    async function cargarVentas() {
-        try {
-            const respuesta = await fetch('http://localhost/HTML/Muebleria1.0/backend/models/listar_ventas.php');
+function cargarClientes() {
+    fetch("http://localhost/HTML/Muebleria1.0/backend/models/listar_clientes.php")
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById("id_cliente");
+            data.forEach(cliente => {
+                let option = document.createElement("option");
+                option.value = cliente.id_cliente;
+                option.textContent = cliente.nombre;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error al cargar clientes:", error));
+}
+
+function cargarMuebles() {
+    fetch("http://localhost/HTML/Muebleria1.0/backend/models/listar_muebles.php")
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById("id_mueble");
+            data.forEach(mueble => {
+                let option = document.createElement("option");
+                option.value = mueble.id_mueble;
+                option.textContent = `${mueble.nombre} - $${mueble.precio}`;
+                option.dataset.precio = mueble.precio; // Guardamos el precio en el dataset
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error al cargar muebles:", error));
+}
+
+// Lógica para agregar muebles a la orden
+let mueblesOrden = [];
+document.getElementById("agregarMueble").addEventListener("click", function () {
+    const selectMueble = document.getElementById("id_mueble");
+    const cantidad = document.getElementById("cantidad").value;
+    const idMueble = selectMueble.value;
+    const nombreMueble = selectMueble.options[selectMueble.selectedIndex].text;
+    const precio = parseFloat(selectMueble.options[selectMueble.selectedIndex].dataset.precio);
     
-            if (!respuesta.ok) {
-                throw new Error(`Error HTTP: ${respuesta.status}`);
-            }
-    
-            const datos = await respuesta.json();
-            console.log("Datos recibidos:", datos);
-    
-            const tablaVentas = document.getElementById("tablaVentas");
-            tablaVentas.innerHTML = ""; // Limpiar la tabla antes de insertar
-    
-            datos.forEach(venta => {
-                const fila = document.createElement("tr");
+    if (!idMueble || cantidad <= 0) {
+        alert("Seleccione un mueble y una cantidad válida.");
+        return;
+    }
+
+    const subtotal = cantidad * precio;
+    mueblesOrden.push({ id_mueble: idMueble, cantidad, subtotal });
+
+    const lista = document.getElementById("listaMuebles");
+    const item = document.createElement("li");
+    item.textContent = `${nombreMueble} - Cantidad: ${cantidad} - Subtotal: $${subtotal.toFixed(2)}`;
+    lista.appendChild(item);
+});
+
+// Enviar la venta al backend
+document.getElementById("formVenta").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const idCliente = document.getElementById("id_cliente").value;
+    if (!idCliente || mueblesOrden.length === 0) {
+        alert("Seleccione un cliente y al menos un mueble.");
+        return;
+    }
+
+    fetch("http://localhost/HTML/Muebleria1.0/backend/models/agregar_venta.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_cliente: idCliente, muebles: mueblesOrden })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+        } else {
+            alert("Venta registrada con éxito.");
+            location.reload();
+        }
+    })
+    .catch(error => console.error("Error al registrar venta:", error));
+});
+
+function cargarVentas() {
+    fetch("http://localhost/HTML/Muebleria1.0/backend/models/listar_ventas.php")
+        .then(response => response.json())
+        .then(data => {
+            console.log("Ventas cargadas:", data); // Verifica qué los datos se estan recibiendo
+            const tbody = document.getElementById("tablaVentas").querySelector("tbody");
+            tbody.innerHTML = ""; // Limpiar tabla
+            console.log("Ventas cargadas:", data);
+
+            data.forEach(venta => {
+                let total = parseFloat(venta.total) || 0; // Asegurar que sea número
+                let fila = document.createElement("tr");
                 fila.innerHTML = `
                     <td>${venta.id_orden}</td>
                     <td>${venta.cliente}</td>
-                    <td>${venta.total}</td>
                     <td>${venta.fecha}</td>
+                    <td>$${total.toFixed(2)}</td> 
                     <td>
-                        <ul>
-                            ${venta.detalles.map(detalle => `
-                                <li>${detalle.mueble} - ${detalle.cantidad} unidades - Subtotal: $${detalle.subtotal}</li>
-                            `).join('')}
-                        </ul>
+                        <button  "id="buttonDetalles" onclick="verDetalles(${venta.id_orden})">Detalles</button>
                     </td>
                 `;
-                tablaVentas.appendChild(fila);
+                tbody.appendChild(fila);
             });
-    
-        } catch (error) {
-            console.error("Error al cargar ventas:", error);
-        }
-    }
-    
-    document.addEventListener("DOMContentLoaded", cargarVentas);
-    
-    function agregarVenta(event) {
-        event.preventDefault();
-        const cliente = document.getElementById("cliente").value;
-        const mueble = document.getElementById("mueble").value;
-        const cantidad = document.getElementById("cantidad").value;
-        const total = document.getElementById("total").value;
-
-        const ventaData = { cliente, mueble, cantidad, total };
-
-        fetch("http://localhost/HTML/Muebleria1.0/backend/models/agregar_venta.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ventaData)
         })
+        .catch(error => console.error("Error al cargar ventas:", error));
+}
+
+
+function verDetalles(id_orden) {
+    fetch(`http://localhost/HTML/Muebleria1.0/backend/models/listar_detalles.php?id_orden=${id_orden}`)
         .then(response => response.json())
         .then(data => {
-            if (data.error) {
-                alert("Error: " + data.error);
-            } else {
-                modal.style.display = "none";
-                cargarVentas();
+            console.log("Detalles cargados:", data);
+            const listaDetalles = document.getElementById("listaDetalles");
+            const detallesVenta = document.getElementById("detallesVenta");
+
+            if (!listaDetalles || !detallesVenta) {
+                console.error("Error: No se encontró el elemento en el HTML.");
+                return;
             }
+
+            listaDetalles.innerHTML = "";
+
+            data.forEach(detalle => {
+                let subtotal = parseFloat(detalle.subtotal) || 0; 
+                let item = document.createElement("li");
+                item.textContent = `${detalle.mueble} - Cantidad: ${detalle.cantidad} - Subtotal: $${subtotal.toFixed(2)}`;
+                listaDetalles.appendChild(item);
+            });
+
+            detallesVenta.style.display = "block";
         })
-        .catch(error => console.error("Error al agregar venta:", error));
-    }
+        .catch(error => console.error("Error al cargar detalles:", error));
+}
 
-    function eliminarVenta(id) {
-        fetch("http://localhost/HTML/Muebleria1.0/backend/models/eliminar_venta.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log("Venta eliminada:", data);
-            cargarVentas();
-        })
-        .catch(error => console.error("Error al eliminar venta:", error));
-    }
-
-    btnAgregar.addEventListener("click", () => {
-        modal.style.display = "block";
-    });
-
-    btnCerrar.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    formVenta.addEventListener("submit", agregarVenta);
-    cargarVentas();
-});
+function cerrarDetalles() {
+    document.getElementById("detallesVenta").style.display = "none";
+}
