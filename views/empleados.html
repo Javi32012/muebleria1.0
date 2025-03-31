@@ -1,13 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empleados</title>
+    <title>Gestión de Empleados</title>
     <link rel="stylesheet" href="../public/css/styles.css">
     <script src="../public/js/empleados.js" defer></script>
 </head>
+
 <body>
     <h1>Gestión de Empleados</h1>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Panel de Control</a></li>
+            <li><a href="clientes.html">Clientes</a></li>
+            <li><a href="muebles.html">Muebles</a></li>
+            <li><a href="ventas.html">Ventas</a></li>
+        </ul>
+    </nav>
+    <button id="agregarEmpleado">Agregar Empleado</button>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Puesto</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaEmpleados">
+            <!-- Los empleados se insertarán aquí dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Formulario modal para agregar/editar empleado -->
+    <div id="modalEmpleado" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar">&times;</span>
+            <h2 id="tituloModal">Agregar Empleado</h2>
+            <form id="formEmpleado">
+                <input type="hidden" id="id_empleado">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="puesto" placeholder="Puesto" required>
+                <input type="email" id="correo" placeholder="Correo" required>
+                <input type="tel" id="telefono" placeholder="Teléfono" required>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
