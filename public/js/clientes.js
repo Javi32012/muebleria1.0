@@ -35,19 +35,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function eliminarCliente(id) {
-        //fetch("../../backend/models/eliminar_cliente.php", {
         fetch("http://localhost/HTML/Muebleria1.0/backend/models/eliminar_cliente.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
+            body: JSON.stringify({ id: id })
         })
-            .then(response => response.text())
-            .then(data => {
-                console.log("Cliente eliminado:", data);
-                cargarClientes();
-            })
-            .catch(error => console.error("Error al eliminar cliente:", error));
+        .then(response => response.text())  // Para ver la respuesta cruda
+        .then(data => {
+            console.log("Respuesta del servidor:", data);
+            const json = JSON.parse(data);
+            alert(json.mensaje);
+            cargarClientes();
+        })
+        .catch(error => console.error("Error al eliminar cliente:", error));
     }
+    
 
 
     function agregarCliente(event) {

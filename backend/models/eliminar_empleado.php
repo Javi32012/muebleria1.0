@@ -1,18 +1,40 @@
 <?php
-include 'conexion.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json; charset=UTF-8");
 
-$data = json_decode(file_get_contents("php://input"), true);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-if (isset($data['id'])) {
-    $sql = "DELETE FROM empleados WHERE id = :id";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':id', $data['id']);
-    if ($stmt->execute()) {
-        echo json_encode(['mensaje' => 'Empleado eliminado con éxito']);
+include 'db.php';
+
+$conexion = new mysqli($host, $user, $password, $database);
+
+if ($conexion->connect_error) {
+    die(json_encode(["mensaje" => "Error de conexión: " . $conexion->connect_error]));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = isset($_POST['id_empleado']) ? intval($_POST['id_empleado']) : 0;
+
+    if ($id > 0) {
+        $stmt = $conexion->prepare("DELETE FROM empleados WHERE id_empleado = ?");
+        $stmt->bind_param("i", $id);
+
+        if ($stmt->execute()) {
+            echo json_encode(["mensaje" => "Empleado eliminado correctamente"]);
+        } else {
+            echo json_encode(["mensaje" => "Error al eliminar empleado"]);
+        }
+
+        $stmt->close();
     } else {
-        echo json_encode(['error' => 'Error al eliminar empleado']);
+        echo json_encode(["mensaje" => "ID inválido"]);
     }
 } else {
-    echo json_encode(['error' => 'ID no proporcionado']);
+    echo json_encode(["mensaje" => "Método no permitido"]);
 }
+
+$conexion->close();
 ?>

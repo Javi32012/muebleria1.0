@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Empleados</title>
     <link rel="stylesheet" href="../public/css/styles.css">
-    <script src="../public/js/empleados.js" defer></script>
+    <script src="../public/js/empleados.js" ></script>
 </head>
 
 <body>
@@ -42,13 +42,12 @@
             <span class="cerrar">&times;</span>
             <h2 id="tituloModal">Agregar Empleado</h2>
             <form id="formEmpleado">
-                <input type="hidden" id="id_empleado">
-                <input type="text" id="nombre" placeholder="Nombre" required>
-                <input type="text" id="puesto" placeholder="Puesto" required>
-                <input type="email" id="correo" placeholder="Correo" required>
-                <input type="tel" id="telefono" placeholder="Teléfono" required>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                <input type="text" id="puesto" name="puesto" placeholder="Puesto" required>
+                <input type="text" id="telefono" name="telefono" placeholder="Telefono" required>
+                <input type="email" id="email" name="email" placeholder="Correo">
                 <button type="submit">Guardar</button>
-            </form>
+            </form>            
         </div>
     </div>
 </body>
